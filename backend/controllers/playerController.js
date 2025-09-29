@@ -122,7 +122,7 @@ exports.setStartingXI = async (req, res) => {
     }
 
     // === Count positions ===
-    const positionCount = { GK: 0, DEF: 0, MID: 0, FWD: 0 };
+    const positionCount = { Goalkeeper: 0, Defender: 0, Midfielder: 0, Forward: 0 };
     validPlayers.forEach((p) => {
       if (positionCount[p.position] !== undefined) {
         positionCount[p.position]++;
@@ -131,19 +131,19 @@ exports.setStartingXI = async (req, res) => {
 
     // === Allowed formations ===
     const validFormations = [
-      { GK: 1, DEF: 4, MID: 4, FWD: 2 }, // 4-4-2
-      { GK: 1, DEF: 4, MID: 3, FWD: 3 }, // 4-3-3
-      { GK: 1, DEF: 3, MID: 5, FWD: 2 }, // 3-5-2
-      { GK: 1, DEF: 5, MID: 3, FWD: 2 }, // 5-3-2
-      { GK: 1, DEF: 4, MID: 5, FWD: 1 }, // 4-5-1
+      { Goalkeeper: 1, Defender: 4, Midfielder: 4, Forward: 2 }, // 4-4-2
+      { Goalkeeper: 1, Defender: 4, Midfielder: 3, Forward: 3 }, // 4-3-3
+      { Goalkeeper: 1, Defender: 3, Midfielder: 5, Forward: 2 }, // 3-5-2
+      { Goalkeeper: 1, Defender: 5, Midfielder: 3, Forward: 2 }, // 5-3-2
+      { Goalkeeper: 1, Defender: 4, Midfielder: 5, Forward: 1 }, // 4-5-1
     ];
 
     const isValidFormation = validFormations.some(
       (f) =>
-        f.GK === positionCount.GK &&
-        f.DEF === positionCount.DEF &&
-        f.MID === positionCount.MID &&
-        f.FWD === positionCount.FWD
+        f.Goalkeeper === positionCount.Goalkeeper &&
+        f.Defender === positionCount.Defender &&
+        f.Midfielder === positionCount.Midfielder &&
+        f.Forward === positionCount.Forward
     );
 
     if (!isValidFormation) {
@@ -159,7 +159,7 @@ exports.setStartingXI = async (req, res) => {
     res.json({
       message: "Starting XI set successfully",
       startingXI: user.startingXI,
-      formation: `${positionCount.DEF}-${positionCount.MID}-${positionCount.FWD}`,
+      formation: `${positionCount.Defender}-${positionCount.Midfielder}-${positionCount.Forward}`,
     });
   } catch (error) {
     console.error(error);

@@ -106,11 +106,11 @@ export const getMyTeam = async () => {
   }
 };
 
-// ✅ EDITED: getMySquad should return the `team` property from the response
+// ✅ EDITED: getMySquad should return the `squad` property from the response
 export const getMySquad = async () => {
   try {
     const res = await API.get("/my-team");
-    return res.data.team || [];
+    return res.data.squad || [];
   } catch (error) {
     handleApi(error);
   }

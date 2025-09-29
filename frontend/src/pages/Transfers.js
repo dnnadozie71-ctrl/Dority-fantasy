@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ArrowLeftOnRectangleIcon, ShoppingCartIcon } from '@heroicons/react/24/solid';
+import "./Transfers.css";
 
 // To resolve the import error, the API functions have been moved into this single file.
 
@@ -169,12 +170,16 @@ const btnStyle = (color) => `
 
 export default function App() {
   const [players, setPlayers] = useState([]);
+  const [filteredPlayers, setFilteredPlayers] = useState([]);
+  const [selectedTeam, setSelectedTeam] = useState("All");
   const [budget, setBudget] = useState(0);
   const [mySquad, setMySquad] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showLoginMessage, setShowLoginMessage] = useState(false);
   const [showUserNotFound, setShowUserNotFound] = useState(false);
+
+  const teams = ["All", "AC Milan", "Inter Milan", "Juventus", "Napoli"];
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -226,6 +231,7 @@ export default function App() {
         console.log("Fetching players...");
         const allPlayers = await getAllPlayers();
         setPlayers(allPlayers);
+        setFilteredPlayers(allPlayers);
 
         const userData = JSON.parse(localStorage.getItem("user"));
         if (userData) {
@@ -248,6 +254,15 @@ export default function App() {
     
     fetchData();
   }, []);
+
+  // Filter players when team selection changes
+  useEffect(() => {
+    if (selectedTeam === "All") {
+      setFilteredPlayers(players);
+    } else {
+      setFilteredPlayers(players.filter(player => player.team === selectedTeam));
+    }
+  }, [selectedTeam, players]);
 
   const handleBuy = async (playerId) => {
     try {
@@ -299,7 +314,7 @@ export default function App() {
     }
   };
 
-  if (loading) return <div className="flex justify-center items-center h-screen bg-gray-900 text-white"><p>Loading players...</p></div>;
+  if (loading) return <div className="loading-container"><p className="loading-text">Loading players...</p></div>;
   
   if (showLoginMessage) {
     return (
@@ -323,24 +338,43 @@ export default function App() {
   const isMySquadValid = Array.isArray(mySquad);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6 font-sans">
-      <div className="container mx-auto">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-white text-center mb-2">Transfers</h1>
-        <p className="text-center text-xl text-yellow-400 font-semibold mb-6">Budget: ${budget}</p>
+    <div className="transfers-container">
+      <div className="transfers-header">
+        <h1 className="transfers-title">Transfers</h1>
+        <p className="transfers-budget">Budget: ${budget}</p>
+      </div>
+
+      {/* Team Filter */}
+      <div className="team-filter-container">
+        <div className="team-filter-buttons">
+          {teams.map((team) => (
+            <button
+              key={team}
+              onClick={() => setSelectedTeam(team)}
+              className={`team-filter-btn ${selectedTeam === team ? 'active' : 'inactive'}`}
+            >
+              {team}
+            </button>
+          ))}
+        </div>
+        <p className="team-filter-count">
+          Showing {filteredPlayers.length} players {selectedTeam !== "All" && `from ${selectedTeam}`}
+        </p>
+      </div>
         
         {/* ✅ NEW: Debug panel for development */}
         {process.env.NODE_ENV === 'development' && (
-          <div className="bg-gray-800 p-4 rounded-lg mb-4 text-sm">
-            <p className="text-gray-400 mb-2">Debug Panel:</p>
+          <div className="debug-panel">
+            <h3>Debug Panel:</h3>
             <button 
               onClick={debugToken}
-              className="mr-2 px-3 py-1 bg-blue-600 rounded text-xs hover:bg-blue-700"
+              className="debug-btn debug-btn-primary"
             >
               Debug Token
             </button>
             <button 
               onClick={clearAuthAndRelogin}
-              className="px-3 py-1 bg-red-600 rounded text-xs hover:bg-red-700"
+              className="debug-btn debug-btn-danger"
             >
               Clear Auth & Re-login
             </button>
@@ -348,19 +382,19 @@ export default function App() {
         )}
         
         {error && (
-          <div className="bg-red-600 text-white p-4 rounded-lg mb-4 text-center">
-            <p className="font-medium">{error}</p>
-            <div className="mt-2 flex justify-center gap-2">
+          <div className="error-message">
+            <p>{error}</p>
+            <div style={{ marginTop: '10px' }}>
               <button 
                 onClick={() => setError(null)}
-                className="px-4 py-1 bg-red-700 hover:bg-red-800 rounded text-sm"
+                className="debug-btn debug-btn-primary"
               >
                 Dismiss
               </button>
               {error.includes("not found") && (
                 <button 
                   onClick={clearAuthAndRelogin}
-                  className="px-4 py-1 bg-red-800 hover:bg-red-900 rounded text-sm"
+                  className="debug-btn debug-btn-danger"
                 >
                   Re-Login
                 </button>
@@ -369,43 +403,39 @@ export default function App() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {players.map((player) => {
+        <div className="players-grid">
+          {filteredPlayers.map((player) => {
             const inSquad = isMySquadValid && mySquad.some((p) => p._id === player._id);
 
             return (
-              <div
-                key={player._id}
-                className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg p-6 flex flex-col items-center text-center transition-all hover:border-blue-500 transform hover:scale-105"
-              >
-                <div className="w-24 h-24 rounded-full bg-blue-500 flex items-center justify-center mb-4">
-                  <span className="text-white text-3xl font-bold">{player.position[0]}</span>
+              <div key={player._id} className="player-card">
+                <div className="player-avatar">
+                  <span>{player.position[0]}</span>
                 </div>
-                <h3 className="text-xl font-bold text-white truncate w-full">{player.name}</h3>
-                <p className="text-gray-400 font-medium">{player.position} | {player.team}</p>
-                <p className="text-green-400 font-bold text-lg mt-1">Price: ${player.marketvalue}M</p>
+                <h3 className="player-name">{player.name}</h3>
+                <p className="player-details">{player.position} | {player.team}</p>
+                <p className="player-price">Price: ${player.marketvalue}M</p>
 
                 {!inSquad ? (
                   <button
                     onClick={() => handleBuy(player._id)}
-                    className={btnStyle('green')}
+                    className={`player-action-btn ${player.marketvalue > budget ? 'btn-disabled' : 'btn-buy'}`}
                     disabled={player.marketvalue > budget}
                   >
-                    <ShoppingCartIcon className="h-5 w-5" /> Buy
+                    <ShoppingCartIcon style={{ width: '20px', height: '20px' }} /> Buy
                   </button>
                 ) : (
                   <button
                     onClick={() => handleSell(player._id)}
-                    className={btnStyle('red')}
+                    className="player-action-btn btn-sell"
                   >
-                    <ArrowLeftOnRectangleIcon className="h-5 w-5" /> Sell
+                    <ArrowLeftOnRectangleIcon style={{ width: '20px', height: '20px' }} /> Sell
                   </button>
                 )}
               </div>
             );
           })}
         </div>
-      </div>
     </div>
   );
 }
