@@ -1,19 +1,23 @@
 import React, { useState } from "react";
-import { loginUser, registerUser } from "../api";
+import { loginUser } from "../api";
+import Signup from "./Signup";
+import "./AuthPage.css";
 
 export default function AuthPage({ onAuth }) {
   const [isLogin, setIsLogin] = useState(true);
-  const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const toggleMode = () => {
     setIsLogin(!isLogin);
     setError("");
+    setForm({ email: "", password: "" });
   };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    if (error) setError(""); // Clear error when user starts typing
   };
 
   const handleSubmit = async (e) => {
@@ -22,88 +26,110 @@ export default function AuthPage({ onAuth }) {
     setLoading(true);
 
     try {
-      let data;
-      if (isLogin) {
-        data = await loginUser({ email: form.email, password: form.password });
-      } else {
-        data = await registerUser(form);
-      }
-
+      const data = await loginUser({ email: form.email, password: form.password });
+      
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("token", data.token);
 
       if (onAuth) onAuth(data.user);
+      
+      // Show success message
+      alert(`Welcome back, ${data.user.username}!`);
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      setError(err.message || "Invalid email or password");
     } finally {
       setLoading(false);
     }
   };
 
+  const handleSignupSuccess = (user) => {
+    if (onAuth) onAuth(user);
+  };
+
+  // If showing signup, render the full signup component
+  if (!isLogin) {
+    return <Signup onSignupSuccess={handleSignupSuccess} />;
+  }
+
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-lg rounded-2xl p-8 w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          {isLogin ? "Login" : "Sign Up"}
-        </h2>
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h1>Welcome Back</h1>
+          <p>Sign in to your Dority Fantasy account</p>
+        </div>
 
-        {error && (
-          <div className="bg-red-100 text-red-700 p-2 mb-4 rounded text-sm">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {!isLogin && (
-            <input
-              type="text"
-              name="username"
-              placeholder="Username"
-              value={form.username}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
-            />
+        <div className="auth-form-container">
+          {error && (
+            <div className="error-alert">
+              <span className="error-icon">⚠️</span>
+              {error}
+            </div>
           )}
 
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={form.email}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
+          <form onSubmit={handleSubmit} className="auth-form">
+            <div className="form-group">
+              <label>Email Address</label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                value={form.email}
+                onChange={handleChange}
+                className={error ? 'error' : ''}
+                required
+              />
+            </div>
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
+            <div className="form-group">
+              <label>Password</label>
+              <input
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                value={form.password}
+                onChange={handleChange}
+                className={error ? 'error' : ''}
+                required
+              />
+            </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-semibold"
-          >
-            {loading ? "Please wait..." : isLogin ? "Login" : "Sign Up"}
-          </button>
-        </form>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-primary"
+            >
+              {loading ? (
+                <>
+                  <span className="spinner"></span>
+                  Signing in...
+                </>
+              ) : (
+                "Sign In"
+              )}
+            </button>
+          </form>
 
-        <p className="text-center text-sm mt-4">
-          {isLogin ? "Don’t have an account?" : "Already have an account?"}{" "}
-          <button
-            onClick={toggleMode}
-            className="text-blue-600 font-semibold hover:underline"
-          >
-            {isLogin ? "Sign Up" : "Login"}
-          </button>
-        </p>
+          <div className="auth-divider">
+            <span>or</span>
+          </div>
+
+          <div className="auth-switch">
+            <p>Don't have an account?</p>
+            <button
+              onClick={toggleMode}
+              className="btn btn-outline"
+            >
+              Create New Account
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div className="auth-background">
+        <div className="floating-element element-1"></div>
+        <div className="floating-element element-2"></div>
+        <div className="floating-element element-3"></div>
       </div>
     </div>
   );
