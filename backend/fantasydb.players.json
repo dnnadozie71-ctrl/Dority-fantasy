@@ -1,0 +1,759 @@
+[{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5a2"
+  },
+  "name": "Chibuike Success",
+  "team": "Inter Milan",
+  "position": "Goalkeeper",
+  "marketvalue": 10,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5a3"
+  },
+  "name": "Okoye Nelson",
+  "team": "Inter Milan",
+  "position": "Defender",
+  "marketvalue": 9.5,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5a4"
+  },
+  "name": "Nnadozie Destiny",
+  "team": "Inter Milan",
+  "position": "Defender",
+  "marketvalue": 10.5,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5a5"
+  },
+  "name": "Ukonu Anointing",
+  "team": "Inter Milan",
+  "position": "Defender",
+  "marketvalue": 15,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5a6"
+  },
+  "name": "Ibe Emmanuel",
+  "team": "Inter Milan",
+  "position": "Defender",
+  "marketvalue": 5,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5a7"
+  },
+  "name": "Nwankwo Osita",
+  "team": "Inter Milan",
+  "position": "Defender",
+  "marketvalue": 10,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5a8"
+  },
+  "name": "Chukwunedum Samuel",
+  "team": "Inter Milan",
+  "position": "Midfielder",
+  "marketvalue": 7.5,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5a9"
+  },
+  "name": "James Nkwumah",
+  "team": "Inter Milan",
+  "position": "Defender",
+  "marketvalue": 5,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5aa"
+  },
+  "name": "Okonkwo Gerard",
+  "team": "Inter Milan",
+  "position": "Midfielder",
+  "marketvalue": 5,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5ab"
+  },
+  "name": "Nnaji Michael",
+  "team": "Inter Milan",
+  "position": "Midfielder",
+  "marketvalue": 8,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5ac"
+  },
+  "name": "Iheanacho Praise",
+  "team": "Inter Milan",
+  "position": "Defender",
+  "marketvalue": 5,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5ad"
+  },
+  "name": "Chimaeze Owen",
+  "team": "Inter Milan",
+  "position": "Defender",
+  "marketvalue": 10,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5ae"
+  },
+  "name": "Ezeugo Enu",
+  "team": "Inter Milan",
+  "position": "Forward",
+  "marketvalue": 10,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5af"
+  },
+  "name": "Muodifo Mac Donald",
+  "team": "Inter Milan",
+  "position": "Forward",
+  "marketvalue": 10,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5b0"
+  },
+  "name": "Okwudiri Solomon",
+  "team": "Inter Milan",
+  "position": "Forward",
+  "marketvalue": 10,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5b1"
+  },
+  "name": "Eke Emmanuel",
+  "team": "Inter Milan",
+  "position": "Forward",
+  "marketvalue": 7.5,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5b2"
+  },
+  "name": "Emole Jules",
+  "team": "Inter Milan",
+  "position": "Forward",
+  "marketvalue": 7,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5b3"
+  },
+  "name": "Nnona Kelvin",
+  "team": "AC Milan",
+  "position": "Goalkeeper",
+  "marketvalue": 15,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5b4"
+  },
+  "name": "Egemole Henry",
+  "team": "AC Milan",
+  "position": "Defender",
+  "marketvalue": 10,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5b5"
+  },
+  "name": "Uzoma Perfect",
+  "team": "AC Milan",
+  "position": "Defender",
+  "marketvalue": 8,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5b6"
+  },
+  "name": "Ibezue Chinedu",
+  "team": "AC Milan",
+  "position": "Defender",
+  "marketvalue": 8,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5b7"
+  },
+  "name": "Onuoha Oscar",
+  "team": "AC Milan",
+  "position": "Defender",
+  "marketvalue": 8.5,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5b8"
+  },
+  "name": "Nnadozie Divine",
+  "team": "AC Milan",
+  "position": "Midfielder",
+  "marketvalue": 10,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5b9"
+  },
+  "name": "Okoye Victor",
+  "team": "AC Milan",
+  "position": "Defender",
+  "marketvalue": 11,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5ba"
+  },
+  "name": "Illona Princewill",
+  "team": "AC Milan",
+  "position": "Midfielder",
+  "marketvalue": 11,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5bb"
+  },
+  "name": "Opara Johnson",
+  "team": "AC Milan",
+  "position": "Midfielder",
+  "marketvalue": 12,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5bc"
+  },
+  "name": "Chibuike Faithful",
+  "team": "AC Milan",
+  "position": "Midfielder",
+  "marketvalue": 8,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5bd"
+  },
+  "name": "Ifejiagwa Ikechukwu",
+  "team": "AC Milan",
+  "position": "Midfielder",
+  "marketvalue": 20,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5be"
+  },
+  "name": "Enuka Ramsey",
+  "team": "AC Milan",
+  "position": "Midfielder",
+  "marketvalue": 4,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5bf"
+  },
+  "name": "Nkumah Udoh Kenneth",
+  "team": "AC Milan",
+  "position": "Defender",
+  "marketvalue": 10,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5c0"
+  },
+  "name": "Dike Kelechi",
+  "team": "AC Milan",
+  "position": "Midfielder",
+  "marketvalue": 20,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5c1"
+  },
+  "name": "Uwandu Delight",
+  "team": "AC Milan",
+  "position": "Forward",
+  "marketvalue": 4.5,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5c2"
+  },
+  "name": "Kingsley Ibezue",
+  "team": "AC Milan",
+  "position": "Forward",
+  "marketvalue": 10,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5c3"
+  },
+  "name": "Ndubisi Success",
+  "team": "AC Milan",
+  "position": "Forward",
+  "marketvalue": 10,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5c4"
+  },
+  "name": "Egbe Bethel",
+  "team": "Juventus",
+  "position": "Goalkeeper",
+  "marketvalue": 12,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5c5"
+  },
+  "name": "Igbonacho Sixtus",
+  "team": "Juventus",
+  "position": "Defender",
+  "marketvalue": 14,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5c6"
+  },
+  "name": "Joseph Prosper",
+  "team": "Juventus",
+  "position": "Defender",
+  "marketvalue": 10,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5c7"
+  },
+  "name": "Augustine Okechukwu",
+  "team": "Juventus",
+  "position": "Defender",
+  "marketvalue": 10,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5c8"
+  },
+  "name": "Okezie David",
+  "team": "Juventus",
+  "position": "Defender",
+  "marketvalue": 8,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5c9"
+  },
+  "name": "Onyema Victor",
+  "team": "Juventus",
+  "position": "Defender",
+  "marketvalue": 10,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5ca"
+  },
+  "name": "Nwankwo Chukwuemeka",
+  "team": "Juventus",
+  "position": "Defender",
+  "marketvalue": 13,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5cb"
+  },
+  "name": "Michael Anudu",
+  "team": "Juventus",
+  "position": "Defender",
+  "marketvalue": 10,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5cc"
+  },
+  "name": "Goodluck Amaefule",
+  "team": "Juventus",
+  "position": "Defender",
+  "marketvalue": 6,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5cd"
+  },
+  "name": "Chukwuma Justin",
+  "team": "Juventus",
+  "position": "Midfielder",
+  "marketvalue": 13,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5ce"
+  },
+  "name": "Nwankwo Tobenna",
+  "team": "Juventus",
+  "position": "Midfielder",
+  "marketvalue": 10,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5cf"
+  },
+  "name": "Kingsley Ezeagu",
+  "team": "Juventus",
+  "position": "Forward",
+  "marketvalue": 13,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5d0"
+  },
+  "name": "Onuoha Isaac",
+  "team": "Juventus",
+  "position": "Midfielder",
+  "marketvalue": 7,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5d1"
+  },
+  "name": "Nwachukwu Martins",
+  "team": "Juventus",
+  "position": "Forward",
+  "marketvalue": 11,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5d2"
+  },
+  "name": "Ofoma Raphael",
+  "team": "Juventus",
+  "position": "Midfielder",
+  "marketvalue": 11,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5d3"
+  },
+  "name": "Onuoha Samuel",
+  "team": "Juventus",
+  "position": "Forward",
+  "marketvalue": 13,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5d4"
+  },
+  "name": "Ernest Kelvin",
+  "team": "Juventus",
+  "position": "Midfielder",
+  "marketvalue": 9,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5d5"
+  },
+  "name": "Amanze Chimdi",
+  "team": "Juventus",
+  "position": "Defender",
+  "marketvalue": 0,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5d6"
+  },
+  "name": "Uchechris Prosper",
+  "team": "Napoli",
+  "position": "Defender",
+  "marketvalue": 12,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5d7"
+  },
+  "name": "Iheji Joseph",
+  "team": "Napoli",
+  "position": "Defender",
+  "marketvalue": 9,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5d8"
+  },
+  "name": "Alabogu Ernest",
+  "team": "Napoli",
+  "position": "Defender",
+  "marketvalue": 6,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5d9"
+  },
+  "name": "Moses Patric",
+  "team": "Napoli",
+  "position": "Defender",
+  "marketvalue": 5,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5da"
+  },
+  "name": "Dike Ogbuogu",
+  "team": "Napoli",
+  "position": "Defender",
+  "marketvalue": 18,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5db"
+  },
+  "name": "Ejike Noble",
+  "team": "Napoli",
+  "position": "Defender",
+  "marketvalue": 3,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5dc"
+  },
+  "name": "Dim Obinna",
+  "team": "Napoli",
+  "position": "Defender",
+  "marketvalue": 3,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5dd"
+  },
+  "name": "C. Miracle Chidiebere",
+  "team": "Napoli",
+  "position": "Midfielder",
+  "marketvalue": 3,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5de"
+  },
+  "name": "Okoye Richard",
+  "team": "Napoli",
+  "position": "Midfielder",
+  "marketvalue": 22,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5df"
+  },
+  "name": "Uchechukwu Uka",
+  "team": "Napoli",
+  "position": "Defender",
+  "marketvalue": 8,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5e0"
+  },
+  "name": "Emmanuel Victor",
+  "team": "Napoli",
+  "position": "Forward",
+  "marketvalue": 6,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5e1"
+  },
+  "name": "Kalu Eke",
+  "team": "Napoli",
+  "position": "Midfielder",
+  "marketvalue": 21,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5e2"
+  },
+  "name": "Nnaji Temple",
+  "team": "Napoli",
+  "position": "Forward",
+  "marketvalue": 18,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5e3"
+  },
+  "name": "Ogueri Henry",
+  "team": "Napoli",
+  "position": "Forward",
+  "marketvalue": 9,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5e4"
+  },
+  "name": "Kalu Jules",
+  "team": "Napoli",
+  "position": "Forward",
+  "marketvalue": 8,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5e5"
+  },
+  "name": "Ayomide Abayomi",
+  "team": "Napoli",
+  "position": "Goalkeeper",
+  "marketvalue": 25,
+  "points": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68c5c4d1e369b328b512f5e6"
+  },
+  "name": "Okoronkwo Akachukwu",
+  "team": "Napoli",
+  "position": "Forward",
+  "marketvalue": 25,
+  "points": 0,
+  "__v": 0
+}]

@@ -1,0 +1,97 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", Arial, sans-serif;
+}
+
+body {
+  background-color: #000;
+  color: #fff;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: #bcd0ff;
+  transition: 0.3s ease;
+}
+
+a:hover {
+  color: #fff;
+}
+
+button {
+  background-color: #4c6ef5;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #3652c8;
+}
+
+input, select, textarea {
+  background-color: #111;
+  border: 1px solid #4c6ef5;
+  border-radius: 6px;
+  padding: 8px;
+  color: #bcd0ff;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #fff;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #111;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 12px;
+  text-align: center;
+}
+
+th {
+  background-color: #000;
+  color: #4c6ef5;
+}
+
+tr:nth-child(even) {
+  background-color: #1a1a1a;
+}
+
+tr:hover {
+  background-color: #222;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #020d35;
+  border-radius: 6px;
+}
+
+.app-wrapper {
+  padding-top: 80px;
+  min-height: 100vh;
+  background-color: #000;
+  color: #fff;
+}

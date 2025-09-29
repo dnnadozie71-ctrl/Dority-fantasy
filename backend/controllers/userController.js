@@ -1,0 +1,97 @@
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken"); // Import jwt once at the top
+const User = require("../models/User");
+const Player = require("../models/Player");
+
+// REGISTER
+exports.register = async (req, res) => {
+  const { username, email, password, selectedPlayers } = req.body;
+  if (!username || !email || !password) return res.status(400).json({ message: "All fields required" });
+
+  try {
+    const existing = await User.findOne({ $or: [{ username }, { email }] });
+    if (existing) return res.status(400).json({ message: "User already exists" });
+
+    const hashedPassword = await bcrypt.hash(password, 10); // Use a more descriptive variable name
+    const user = new User({
+      username,
+      email,
+      password: hashedPassword,
+      squad: selectedPlayers || [],
+      // Ensure 'budget', 'points', 'totalPoints' are set with defaults
+      budget: 100, // Or whatever your default is
+      points: 0,
+      totalPoints: 0,
+    });
+    await user.save();
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" }); // Use the imported jwt
+
+    res.status(201).json({ token, user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ----------------------------------------------------------------------------------------------------
+
+// LOGIN (supports email or username)
+exports.login = async (req, res) => {
+  const { identifier, password } = req.body;
+  if (!identifier || !password) {
+    return res.status(400).json({ message: "Email/Username and password are required" });
+  }
+
+  try {
+    const user = await User.findOne({
+      $or: [{ email: identifier }, { username: identifier }],
+    }).populate("squad");
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid credentials" }); // Use a generic message for security
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    const token = jwt.sign( // Use the imported jwt
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.json({
+      message: "Login successful",
+      token,
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        budget: user.budget,
+        squad: user.squad,
+        points: user.points,
+        totalPoints: user.totalPoints,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ----------------------------------------------------------------------------------------------------
+
+// GET ALL USERS (Leaderboard)
+exports.getAllUsers = async (req, res) => {
+  try {
+    // Select specific fields for the leaderboard to avoid sending sensitive data
+    const users = await User.find().select("username totalPoints").sort({ totalPoints: -1 });
+    res.json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};

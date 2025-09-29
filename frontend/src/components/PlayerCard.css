@@ -1,0 +1,44 @@
+.player-card {
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin: 10px;
+  border-radius: 8px;
+  background: #fff;
+  width: 220px;
+  text-align: center;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.player-card h3 {
+  margin: 0 0 10px;
+  color: #4c6ef5;
+}
+
+.player-card p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.player-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.buy-btn {
+  background: #4c6ef5;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.sell-btn {
+  background: #f03e3e;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
