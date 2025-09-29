@@ -24,13 +24,13 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
-// Add response interceptor to handle 401 globally
+// Add response interceptor to handle 401 and user not found errors
 API.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      console.log("401 Unauthorized - clearing token and redirecting");
-      // Token is invalid, clear it and redirect
+    if (error.response?.status === 401 || 
+        (error.response?.status === 404 && error.response?.data?.shouldReLogin)) {
+      console.log("Authentication issue - clearing token and redirecting");
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       window.location.href = "/auth";
@@ -39,10 +39,23 @@ API.interceptors.response.use(
   }
 );
 
-// ✅ FIXED: Better error handling
+// ✅ FIXED: Better error handling with auto-relogin for user not found
 const handleApi = (error) => {
   if (error.response && error.response.data) {
     console.error("API Error:", error.response.data);
+    
+    // Handle "User not found" specifically
+    if (error.response.data.message === 'User not found' || 
+        error.response.status === 404) {
+      console.log("User not found - clearing auth data");
+      localStorage.removeItem("token");
+      localStorage.removeUser("user");
+      setTimeout(() => {
+        window.location.href = "/auth";
+      }, 1000);
+      throw new Error("User not found. Redirecting to login...");
+    }
+    
     // Extract the message string from the response object
     const errorMessage = error.response.data.message || 
                         (typeof error.response.data === 'string' ? error.response.data : JSON.stringify(error.response.data));
@@ -79,19 +92,68 @@ const sellPlayer = async (playerId) => {
     handleApi(error);
   }
 };
+
+// ✅ NEW: Debug function to analyze token
+const debugToken = () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      console.log("=== TOKEN ANALYSIS ===");
+      console.log("Full payload:", payload);
+      console.log("User ID:", payload.userId || payload.id || payload.sub || payload.user);
+      console.log("Issued at:", new Date(payload.iat * 1000));
+      console.log("Expires at:", new Date(payload.exp * 1000));
+      console.log("Is expired?", payload.exp * 1000 < Date.now());
+      
+      // Check if user data in localStorage matches token
+      const savedUser = JSON.parse(localStorage.getItem("user") || "{}");
+      console.log("Saved user ID:", savedUser._id || savedUser.id);
+      console.log("IDs match?", (payload.userId || payload.id || payload.sub) === (savedUser._id || savedUser.id));
+      console.log("=== END TOKEN ANALYSIS ===");
+      return payload;
+    } catch (e) {
+      console.error("Could not decode token:", e);
+    }
+  }
+  return null;
+};
+
+// ✅ NEW: Function to clear auth and force re-login
+const clearAuthAndRelogin = () => {
+  console.log("Clearing auth data and redirecting to login...");
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  window.location.href = "/auth";
+};
+
+// Make debug functions available globally for console testing
+window.debugToken = debugToken;
+window.clearAuth = clearAuthAndRelogin;
+
 // ===== END OF API FUNCTIONS =====
 
 // A simple modal/message box component to replace alerts
-const MessageBox = ({ message, onClose }) => (
+const MessageBox = ({ message, onClose, showClearAuth = false }) => (
   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
     <div className="bg-white text-gray-800 rounded-lg shadow-xl p-6 max-w-sm w-full text-center">
-      <p className="font-semibold text-lg">{message}</p>
-      <button
-        onClick={onClose}
-        className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
-      >
-        OK
-      </button>
+      <p className="font-semibold text-lg mb-4">{message}</p>
+      <div className="flex gap-2 justify-center">
+        <button
+          onClick={onClose}
+          className="px-4 py-2 bg-gray-500 text-white rounded-full hover:bg-gray-600 transition-colors"
+        >
+          Dismiss
+        </button>
+        {showClearAuth && (
+          <button
+            onClick={clearAuthAndRelogin}
+            className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+          >
+            Re-Login
+          </button>
+        )}
+      </div>
     </div>
   </div>
 );
@@ -112,42 +174,51 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showLoginMessage, setShowLoginMessage] = useState(false);
+  const [showUserNotFound, setShowUserNotFound] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const savedUser = localStorage.getItem("user");
 
-    // ✅ IMPROVED: Better token validation
-    console.log("Checking authentication...");
+    console.log("=== AUTHENTICATION CHECK ===");
     console.log("Token exists:", !!token);
     console.log("User exists:", !!savedUser);
 
+    // ✅ IMPROVED: Better validation with auto-cleanup
     if (!token || token === 'null' || token === 'undefined') {
       console.log("Invalid or missing token:", token);
       setShowLoginMessage(true);
-      setTimeout(() => {
-        window.location.href = "/auth";
-      }, 2000);
+      setTimeout(() => window.location.href = "/auth", 2000);
       return;
     }
 
-    // ✅ NEW: Check if JWT token is expired (optional but recommended)
+    // ✅ NEW: Check if user data is corrupted or missing
     try {
-      const tokenPayload = JSON.parse(atob(token.split('.')[1])); // Decode JWT
+      const userData = JSON.parse(savedUser || "{}");
+      if (!userData._id && !userData.id) {
+        console.log("User data is corrupted or missing - clearing auth");
+        clearAuthAndRelogin();
+        return;
+      }
+    } catch (e) {
+      console.log("Could not parse user data - clearing auth");
+      clearAuthAndRelogin();
+      return;
+    }
+
+    // ✅ IMPROVED: JWT token validation with better error handling
+    try {
+      const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+      console.log("Token payload:", tokenPayload);
+      
       const isExpired = tokenPayload.exp * 1000 < Date.now();
       if (isExpired) {
-        console.log("Token is expired");
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        setShowLoginMessage(true);
-        setTimeout(() => {
-          window.location.href = "/auth";
-        }, 2000);
+        console.log("Token is expired - clearing auth");
+        clearAuthAndRelogin();
         return;
       }
     } catch (e) {
       console.log("Could not decode token (might not be JWT format):", e.message);
-      // Continue anyway - some tokens might not be JWT format
     }
 
     const fetchData = async () => {
@@ -163,17 +234,24 @@ export default function App() {
         }
       } catch (err) {
         console.error("Error in fetchData:", err);
-        setError("Failed to fetch players: " + err.message);
+        
+        // ✅ NEW: Handle "User not found" specifically
+        if (err.message.includes("User not found") || err.message.includes("not found")) {
+          setShowUserNotFound(true);
+        } else {
+          setError("Failed to fetch players: " + err.message);
+        }
       } finally {
         setLoading(false);
       }
     };
+    
     fetchData();
   }, []);
 
   const handleBuy = async (playerId) => {
     try {
-      setError(null); // Clear previous errors
+      setError(null);
       console.log("Attempting to buy player:", playerId);
       const res = await buyPlayer(playerId);
       const updatedUser = {
@@ -186,13 +264,19 @@ export default function App() {
       localStorage.setItem("user", JSON.stringify(updatedUser));
     } catch (err) {
       console.error("Buy player error:", err);
-      setError(err.message || "Failed to buy player");
+      
+      // ✅ NEW: Handle user not found during transactions
+      if (err.message.includes("User not found")) {
+        setShowUserNotFound(true);
+      } else {
+        setError(err.message || "Failed to buy player");
+      }
     }
   };
 
   const handleSell = async (playerId) => {
     try {
-      setError(null); // Clear previous errors
+      setError(null);
       console.log("Attempting to sell player:", playerId);
       const res = await sellPlayer(playerId);
       const updatedUser = {
@@ -205,7 +289,13 @@ export default function App() {
       localStorage.setItem("user", JSON.stringify(updatedUser));
     } catch (err) {
       console.error("Sell player error:", err);
-      setError(err.message || "Failed to sell player");
+      
+      // ✅ NEW: Handle user not found during transactions
+      if (err.message.includes("User not found")) {
+        setShowUserNotFound(true);
+      } else {
+        setError(err.message || "Failed to sell player");
+      }
     }
   };
 
@@ -220,6 +310,16 @@ export default function App() {
     );
   }
 
+  if (showUserNotFound) {
+    return (
+      <MessageBox
+        message="Your user account was not found. Please log in again to continue."
+        onClose={() => setShowUserNotFound(false)}
+        showClearAuth={true}
+      />
+    );
+  }
+
   const isMySquadValid = Array.isArray(mySquad);
 
   return (
@@ -228,15 +328,44 @@ export default function App() {
         <h1 className="text-4xl md:text-5xl font-extrabold text-white text-center mb-2">Transfers</h1>
         <p className="text-center text-xl text-yellow-400 font-semibold mb-6">Budget: ${budget}</p>
         
+        {/* ✅ NEW: Debug panel for development */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="bg-gray-800 p-4 rounded-lg mb-4 text-sm">
+            <p className="text-gray-400 mb-2">Debug Panel:</p>
+            <button 
+              onClick={debugToken}
+              className="mr-2 px-3 py-1 bg-blue-600 rounded text-xs hover:bg-blue-700"
+            >
+              Debug Token
+            </button>
+            <button 
+              onClick={clearAuthAndRelogin}
+              className="px-3 py-1 bg-red-600 rounded text-xs hover:bg-red-700"
+            >
+              Clear Auth & Re-login
+            </button>
+          </div>
+        )}
+        
         {error && (
           <div className="bg-red-600 text-white p-4 rounded-lg mb-4 text-center">
             <p className="font-medium">{error}</p>
-            <button 
-              onClick={() => setError(null)}
-              className="mt-2 px-4 py-1 bg-red-700 hover:bg-red-800 rounded text-sm"
-            >
-              Dismiss
-            </button>
+            <div className="mt-2 flex justify-center gap-2">
+              <button 
+                onClick={() => setError(null)}
+                className="px-4 py-1 bg-red-700 hover:bg-red-800 rounded text-sm"
+              >
+                Dismiss
+              </button>
+              {error.includes("not found") && (
+                <button 
+                  onClick={clearAuthAndRelogin}
+                  className="px-4 py-1 bg-red-800 hover:bg-red-900 rounded text-sm"
+                >
+                  Re-Login
+                </button>
+              )}
+            </div>
           </div>
         )}
 
