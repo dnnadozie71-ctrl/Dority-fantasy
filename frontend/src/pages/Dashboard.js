@@ -64,12 +64,11 @@ export default function Dashboard() {
           padding: "40px",
           maxWidth: "500px"
         }}>
-          <h2 style={{ color: "#4c6ef5", marginBottom: "20px" }}>⚽ Complete Your Team Selection!</h2>
+          <h2 style={{ color: "#4c6ef5", marginBottom: "20px" }}> Complete Your Team Selection!</h2>
           <p style={{ marginBottom: "20px", fontSize: "1.2rem" }}>
             You must pick 11 starters and 4 subs before accessing the dashboard.
           </p>
           
-          {/* Debug Info */}
           <div style={{ 
             background: "rgba(255, 255, 255, 0.1)", 
             padding: "15px", 
@@ -79,9 +78,9 @@ export default function Dashboard() {
             textAlign: "left"
           }}>
             <h4 style={{ margin: "0 0 10px 0", color: "#f39c12" }}>Current Status:</h4>
-            <p style={{ margin: "5px 0" }}>👥 Squad: {user?.squad?.length || 0}/15 players</p>
-            <p style={{ margin: "5px 0" }}>🏟️ Starting XI: {startingXI.length}/11 players</p>
-            <p style={{ margin: "5px 0" }}>🔄 Substitutes: {subs.length}/4 players</p>
+            <p style={{ margin: "5px 0" }}> Squad: {user?.squad?.length || 0}/15 players</p>
+            <p style={{ margin: "5px 0" }}> Starting XI: {startingXI.length}/11 players</p>
+            <p style={{ margin: "5px 0" }}> Substitutes: {subs.length}/4 players</p>
           </div>
 
           <div style={{ display: "flex", gap: "10px", justifyContent: "center", flexWrap: "wrap" }}>

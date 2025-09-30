@@ -47,13 +47,9 @@ export default function AuthPage({ onAuth }) {
     }
   };
 
-  const handleSignupSuccess = (user) => {
-    if (onAuth) onAuth(user);
-  };
-
   // If showing signup, render the full signup component
   if (!isLogin) {
-    return <Signup onSignupSuccess={handleSignupSuccess} />;
+    return <Signup />;
   }
 
   return (

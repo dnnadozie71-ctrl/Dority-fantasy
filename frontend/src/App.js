@@ -14,7 +14,6 @@ import Dashboard from "./pages/Dashboard";
 import Contact from "./pages/Contact";
 import AuthPage from "./pages/AuthPage";
 import News from "./pages/News";
-import Transfers from "./pages/Transfers";
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -44,7 +43,6 @@ function App() {
           {/* 🔑 Pass onAuth instead of setUser */}
           <Route path="/auth" element={<AuthPage onAuth={setUser} />} />
           <Route path="/news" element={<News />} />
-          <Route path="/transfers" element={<Transfers userId={user?._id} />} />
         </Routes>
       </div>
     </>

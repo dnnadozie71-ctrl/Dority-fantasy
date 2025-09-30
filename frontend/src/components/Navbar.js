@@ -17,7 +17,6 @@ export default function Navbar({ user, setUser }) {
     { path: "/", label: "Home" },
     { path: "/players", label: "Players" },
     { path: "/pick-team", label: "Pick Team" },
-    { path: "/transfers", label: "Transfers" },
     { path: "/dashboard", label: "Dashboard" },
     { path: "/leaderboard", label: "Leaderboard" },
     { path: "/groups", label: "Groups" },

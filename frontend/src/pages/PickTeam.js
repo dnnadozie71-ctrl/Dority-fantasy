@@ -218,13 +218,13 @@ export default function PickTeam() {
           color: "#4c6ef5",
           textDecoration: "none",
           marginRight: "20px"
-        }}>🏪 Players</a>
+        }}> Players</a>
         <span style={{ color: "#666" }}>|</span>
         <a href="/dashboard" style={{
           color: "#4c6ef5",
           textDecoration: "none",
           marginLeft: "20px"
-        }}>📊 Dashboard</a>
+        }}> Dashboard</a>
       </div>
     </div>
   );
