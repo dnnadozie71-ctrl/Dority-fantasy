@@ -125,11 +125,11 @@ export default function Signup({ onSignupSuccess }) {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
         onSignupSuccess && onSignupSuccess(res.data.user);
-        alert("Account created successfully! Welcome to Dority Fantasy! Now let's build your team!");
+        alert("Account created successfully! Welcome to Dority Fantasy! Let's start building your team!");
         
-        // Redirect to transfers page to buy players
+        // Redirect to home page after signup
         setTimeout(() => {
-          window.location.href = "/transfers";
+          window.location.href = "/home";
         }, 2000);
       }
     } catch (err) {

@@ -6,7 +6,7 @@ import Navbar from "./components/Navbar";
 
 // Pages
 import Home from "./pages/Home";
-import PlayersList from "./pages/PlayersList";
+import Players from "./pages/Players";
 import PickTeam from "./pages/PickTeam";
 import Leaderboard from "./pages/Leaderboard";
 import Groups from "./pages/Groups";
@@ -35,7 +35,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/players" element={<PlayersList userId={user?._id} />} />
+          <Route path="/players" element={<Players userId={user?._id} />} />
           <Route path="/pick-team" element={<PickTeam userId={user?._id} />} />
           <Route path="/dashboard" element={<Dashboard userId={user?._id} />} />
           <Route path="/leaderboard" element={<Leaderboard />} />

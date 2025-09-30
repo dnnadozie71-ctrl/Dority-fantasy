@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { loginUser } from "../api";
 import Signup from "./Signup";
 import "./AuthPage.css";
-import "./Signup.css"; // Import signup styles for consistent design
 
 export default function AuthPage({ onAuth }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -58,14 +57,14 @@ export default function AuthPage({ onAuth }) {
   }
 
   return (
-    <div className="signup-container">
-      <div className="signup-card">
-        <div className="signup-header">
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
           <h1>Welcome Back</h1>
-          <p>Sign in to your Dority Fantasy account and continue your journey!</p>
+          <p>Sign in to your Dority Fantasy account</p>
         </div>
 
-        <div className="signup-form-container">
+        <div className="auth-form-container">
           {error && (
             <div className="error-alert">
               <span className="error-icon">⚠️</span>
@@ -73,7 +72,7 @@ export default function AuthPage({ onAuth }) {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="signup-form">
+          <form onSubmit={handleSubmit} className="auth-form">
             <div className="form-group">
               <label>Email Address</label>
               <input
@@ -124,7 +123,7 @@ export default function AuthPage({ onAuth }) {
             <p>Don't have an account?</p>
             <button
               onClick={toggleMode}
-              className="btn btn-secondary"
+              className="btn btn-outline"
             >
               Create New Account
             </button>

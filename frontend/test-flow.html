@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Football Flow Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+        .result {
+            background: rgba(0, 255, 0, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .error {
+            background: rgba(255, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🏆 Fantasy Football Flow Test</h1>
+    
+    <div class="test-section">
+        <h2>📊 Current Status</h2>
+        <div id="currentStatus">Checking...</div>
+        <button onclick="checkStatus()">Refresh Status</button>
+    </div>
+
+    <div class="test-section">
+        <h2>⚡ Quick Tests</h2>
+        <button onclick="testBackendAPI()">Test Backend API</button>
+        <button onclick="testPlayerCount()">Test Player Count</button>
+        <button onclick="simulateUserFlow()">Simulate Complete Flow</button>
+        <div id="testResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 Quick Navigation</h2>
+        <button onclick="window.open('http://localhost:3000', '_blank')">Home Page</button>
+        <button onclick="window.open('http://localhost:3000/auth', '_blank')">Auth Page</button>
+        <button onclick="window.open('http://localhost:3000/players', '_blank')">Players Page</button>
+        <button onclick="window.open('http://localhost:3000/pick-team', '_blank')">Pick Team</button>
+        <button onclick="window.open('http://localhost:3000/dashboard', '_blank')">Dashboard</button>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 User Journey Checklist</h2>
+        <div id="checklist">
+            <p>✅ 1. Sign up → Redirected to home page</p>
+            <p>⏳ 2. Go to players page → Buy 15 players (max 100M budget)</p>
+            <p>⏳ 3. Go to pick team → Select 11 starting + 4 subs</p>
+            <p>⏳ 4. Go to dashboard → Set formation (4-3-3, 4-4-2, etc.)</p>
+            <p>⏳ 5. All data persists in localStorage</p>
+        </div>
+    </div>
+
+    <script>
+        async function checkStatus() {
+            const status = document.getElementById('currentStatus');
+            status.innerHTML = 'Checking...';
+            
+            try {
+                // Check backend
+                const backendResponse = await fetch('http://localhost:5000/api/players');
+                const backendStatus = backendResponse.ok ? '✅' : '❌';
+                
+                // Check frontend
+                const frontendResponse = await fetch('http://localhost:3000');
+                const frontendStatus = frontendResponse.ok ? '✅' : '❌';
+                
+                // Check localStorage
+                const user = localStorage.getItem('user');
+                const token = localStorage.getItem('token');
+                const localStorageStatus = (user && token) ? '✅' : '⚠️';
+                
+                status.innerHTML = `
+                    <strong>Backend (Port 5000):</strong> ${backendStatus}<br>
+                    <strong>Frontend (Port 3000):</strong> ${frontendStatus}<br>
+                    <strong>User Data:</strong> ${localStorageStatus}<br>
+                    <small>Last updated: ${new Date().toLocaleTimeString()}</small>
+                `;
+            } catch (error) {
+                status.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function testBackendAPI() {
+            const results = document.getElementById('testResults');
+            try {
+                const response = await fetch('http://localhost:5000/api/players');
+                const players = await response.json();
+                results.innerHTML = `<div class="result">✅ Backend API working! Found ${players.length} players</div>`;
+            } catch (error) {
+                results.innerHTML = `<div class="error">❌ Backend API failed: ${error.message}</div>`;
+            }
+        }
+
+        async function testPlayerCount() {
+            const results = document.getElementById('testResults');
+            try {
+                const response = await fetch('http://localhost:5000/api/players');
+                const players = await response.json();
+                
+                const goalkeepers = players.filter(p => p.position === 'Goalkeeper').length;
+                const defenders = players.filter(p => p.position === 'Defender').length;
+                const midfielders = players.filter(p => p.position === 'Midfielder').length;
+                const forwards = players.filter(p => p.position === 'Forward').length;
+                
+                results.innerHTML = `<div class="result">
+                    ✅ Player distribution:<br>
+                    🥅 Goalkeepers: ${goalkeepers}<br>
+                    🛡️ Defenders: ${defenders}<br>
+                    ⚡ Midfielders: ${midfielders}<br>
+                    ⚽ Forwards: ${forwards}<br>
+                    <strong>Total: ${players.length} players</strong>
+                </div>`;
+            } catch (error) {
+                results.innerHTML = `<div class="error">❌ Player count failed: ${error.message}</div>`;
+            }
+        }
+
+        function simulateUserFlow() {
+            const results = document.getElementById('testResults');
+            
+            // Simulate a user with a squad
+            const mockUser = {
+                username: "testuser",
+                email: "test@example.com",
+                squad: [
+                    {_id: "1", name: "Test Player 1", position: "Goalkeeper", marketvalue: 10, team: "AC Milan"},
+                    {_id: "2", name: "Test Player 2", position: "Defender", marketvalue: 8, team: "AC Milan"},
+                    {_id: "3", name: "Test Player 3", position: "Defender", marketvalue: 9, team: "Inter Milan"},
+                    {_id: "4", name: "Test Player 4", position: "Defender", marketvalue: 7, team: "Juventus"},
+                    {_id: "5", name: "Test Player 5", position: "Defender", marketvalue: 6, team: "Napoli"},
+                    {_id: "6", name: "Test Player 6", position: "Midfielder", marketvalue: 12, team: "AC Milan"},
+                    {_id: "7", name: "Test Player 7", position: "Midfielder", marketvalue: 10, team: "Inter Milan"},
+                    {_id: "8", name: "Test Player 8", position: "Midfielder", marketvalue: 8, team: "Juventus"},
+                    {_id: "9", name: "Test Player 9", position: "Forward", marketvalue: 15, team: "AC Milan"},
+                    {_id: "10", name: "Test Player 10", position: "Forward", marketvalue: 12, team: "Inter Milan"},
+                    {_id: "11", name: "Test Player 11", position: "Forward", marketvalue: 8, team: "Napoli"},
+                    {_id: "12", name: "Test Player 12", position: "Goalkeeper", marketvalue: 6, team: "Juventus"},
+                    {_id: "13", name: "Test Player 13", position: "Defender", marketvalue: 5, team: "AC Milan"},
+                    {_id: "14", name: "Test Player 14", position: "Midfielder", marketvalue: 7, team: "Inter Milan"},
+                    {_id: "15", name: "Test Player 15", position: "Forward", marketvalue: 9, team: "Napoli"}
+                ],
+                startingXI: [],
+                subs: [],
+                formation: "4-3-3"
+            };
+            
+            localStorage.setItem('user', JSON.stringify(mockUser));
+            localStorage.setItem('token', 'mock_token_123');
+            
+            results.innerHTML = `<div class="result">
+                ✅ Mock user data created!<br>
+                👤 Username: ${mockUser.username}<br>
+                ⚽ Squad: ${mockUser.squad.length} players<br>
+                💰 Total spent: ${mockUser.squad.reduce((sum, p) => sum + p.marketvalue, 0)}M<br>
+                <strong>Now test the flow by visiting the pages above!</strong>
+            </div>`;
+        }
+
+        // Auto-check status on load
+        window.onload = checkStatus;
+    </script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Tool - Fantasy Football</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .debug-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        button {
+            background: linear-gradient(135deg, #4c6ef5 0%, #3b5bdb 100%);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: 600;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 110, 245, 0.4);
+        }
+        .success { color: #2ecc71; }
+        .error { color: #e74c3c; }
+        .warning { color: #f39c12; }
+        pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; font-size: 3rem; margin-bottom: 30px;">
+            🔧 Debug Tool
+        </h1>
+        
+        <div class="debug-card">
+            <h2>📊 Current User Data</h2>
+            <button onclick="checkUserData()">Check LocalStorage</button>
+            <button onclick="clearAllData()">Clear All Data</button>
+            <button onclick="createTestTeam()">Create Test Team</button>
+            <div id="userDataResult"></div>
+        </div>
+
+        <div class="debug-card">
+            <h2>⚽ Team Status Check</h2>
+            <button onclick="checkTeamStatus()">Check Team Status</button>
+            <div id="teamStatusResult"></div>
+        </div>
+
+        <div class="debug-card">
+            <h2>🔗 Quick Navigation</h2>
+            <button onclick="window.open('http://localhost:3000/players', '_blank')">Players</button>
+            <button onclick="window.open('http://localhost:3000/pick-team', '_blank')">Pick Team</button>
+            <button onclick="window.open('http://localhost:3000/dashboard', '_blank')">Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        function checkUserData() {
+            const result = document.getElementById('userDataResult');
+            const user = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+            
+            if (!user) {
+                result.innerHTML = '<p class="error">❌ No user data found in localStorage</p>';
+                return;
+            }
+            
+            try {
+                const userData = JSON.parse(user);
+                let html = '<h3>User Data Found:</h3>';
+                html += `<pre>${JSON.stringify(userData, null, 2)}</pre>`;
+                
+                html += '<h4>Summary:</h4>';
+                html += `<p><strong>Username:</strong> ${userData.username || 'Not set'}</p>`;
+                html += `<p><strong>Email:</strong> ${userData.email || 'Not set'}</p>`;
+                html += `<p><strong>Squad:</strong> ${userData.squad ? userData.squad.length : 0} players</p>`;
+                html += `<p><strong>Starting XI:</strong> ${userData.startingXI ? userData.startingXI.length : 0} players</p>`;
+                html += `<p><strong>Substitutes:</strong> ${userData.subs ? userData.subs.length : 0} players</p>`;
+                html += `<p><strong>Formation:</strong> ${userData.formation || 'Not set'}</p>`;
+                html += `<p><strong>Token:</strong> ${token ? '✅ Present' : '❌ Missing'}</p>`;
+                
+                result.innerHTML = html;
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Error parsing user data: ${error.message}</p>`;
+            }
+        }
+
+        function checkTeamStatus() {
+            const result = document.getElementById('teamStatusResult');
+            const user = localStorage.getItem('user');
+            
+            if (!user) {
+                result.innerHTML = '<p class="error">❌ No user data found</p>';
+                return;
+            }
+            
+            try {
+                const userData = JSON.parse(user);
+                const squad = userData.squad || [];
+                const startingXI = userData.startingXI || [];
+                const subs = userData.subs || [];
+                
+                let html = '<h3>Team Status:</h3>';
+                
+                // Squad check
+                if (squad.length === 0) {
+                    html += '<p class="error">❌ No players in squad</p>';
+                    html += '<p>👉 Go to <a href="/players" style="color: #3498db;">Players page</a> to buy players</p>';
+                } else if (squad.length < 15) {
+                    html += `<p class="warning">⚠️ Squad incomplete: ${squad.length}/15 players</p>`;
+                    html += '<p>👉 Buy more players to complete your squad</p>';
+                } else {
+                    html += `<p class="success">✅ Squad complete: ${squad.length}/15 players</p>`;
+                }
+                
+                // Starting XI check
+                if (startingXI.length === 0) {
+                    html += '<p class="error">❌ No starting XI selected</p>';
+                    if (squad.length >= 11) {
+                        html += '<p>👉 Go to <a href="/pick-team" style="color: #27ae60;">Pick Team page</a> to select your starting XI</p>';
+                    }
+                } else if (startingXI.length < 11) {
+                    html += '<p class="warning">⚠️ Starting XI incomplete: ' + startingXI.length + '/11 players</p>';
+                } else {
+                    html += '<p class="success">✅ Starting XI complete: ' + startingXI.length + '/11 players</p>';
+                }
+                
+                // Subs check
+                if (subs.length === 0) {
+                    html += '<p class="error">❌ No substitutes selected</p>';
+                } else if (subs.length < 4) {
+                    html += '<p class="warning">⚠️ Substitutes incomplete: ' + subs.length + '/4 players</p>';
+                } else {
+                    html += '<p class="success">✅ Substitutes complete: ' + subs.length + '/4 players</p>';
+                }
+                
+                // Dashboard readiness
+                if (startingXI.length === 11 && subs.length === 4) {
+                    html += '<p class="success">🎉 <strong>Ready for Dashboard!</strong></p>';
+                    html += '<p>👉 Go to <a href="/dashboard" style="color: #4c6ef5;">Dashboard</a> to see your team</p>';
+                } else {
+                    html += '<p class="error">❌ <strong>Not ready for Dashboard</strong></p>';
+                    html += '<p>Complete your team selection first</p>';
+                }
+                
+                result.innerHTML = html;
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all data?')) {
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                alert('All data cleared!');
+                checkUserData();
+                checkTeamStatus();
+            }
+        }
+
+        async function createTestTeam() {
+            try {
+                // Fetch players from API
+                const response = await fetch('http://localhost:5000/api/players');
+                const players = await response.json();
+                
+                if (players.length < 15) {
+                    alert('Not enough players available in the API');
+                    return;
+                }
+                
+                // Create a balanced squad
+                const goalkeepers = players.filter(p => p.position === 'Goalkeeper').slice(0, 2);
+                const defenders = players.filter(p => p.position === 'Defender').slice(0, 6);
+                const midfielders = players.filter(p => p.position === 'Midfielder').slice(0, 4);
+                const forwards = players.filter(p => p.position === 'Forward').slice(0, 3);
+                
+                const squad = [...goalkeepers, ...defenders, ...midfielders, ...forwards];
+                
+                // Create starting XI (4-3-3 formation)
+                const startingXI = [
+                    goalkeepers[0],
+                    ...defenders.slice(0, 4),
+                    ...midfielders.slice(0, 3),
+                    ...forwards
+                ];
+                
+                // Create subs
+                const subs = [
+                    goalkeepers[1],
+                    defenders[4],
+                    defenders[5],
+                    midfielders[3]
+                ];
+                
+                const testUser = {
+                    username: "TestUser",
+                    email: "test@example.com",
+                    squad: squad,
+                    startingXI: startingXI,
+                    subs: subs,
+                    formation: "4-3-3"
+                };
+                
+                localStorage.setItem('user', JSON.stringify(testUser));
+                localStorage.setItem('token', 'test_token');
+                
+                alert('Test team created successfully!');
+                checkUserData();
+                checkTeamStatus();
+                
+            } catch (error) {
+                alert('Error creating test team: ' + error.message);
+            }
+        }
+
+        // Auto-run checks on load
+        window.onload = function() {
+            checkUserData();
+            checkTeamStatus();
+        };
+    </script>
+</body>
+</html>

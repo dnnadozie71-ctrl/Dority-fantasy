@@ -1,252 +1,242 @@
-// frontend/src/pages/Dashboard.js
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+﻿import React, { useEffect, useState } from "react";
 
+const formations = [
+  { name: "4-3-3", layout: [4, 3, 3] },
+  { name: "4-4-2", layout: [4, 4, 2] },
+  { name: "3-5-2", layout: [3, 5, 2] },
+  { name: "5-3-2", layout: [5, 3, 2] },
+  { name: "4-2-3-1", layout: [4, 2, 3, 1] }
+];
 
 export default function Dashboard() {
-  const [formation, setFormation] = useState("4-4-2");
-  const [teamName, setTeamName] = useState("Your Team");
-  const [userTeam, setUserTeam] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [startingXI, setStartingXI] = useState([]);
+  const [subs, setSubs] = useState([]);
+  const [formation, setFormation] = useState(formations[0].name);
 
-  const MAX_BUDGET = 100;
   useEffect(() => {
-    const token = localStorage.getItem("token");
     const savedUser = localStorage.getItem("user");
-
-    if (!token || !savedUser) {
-      alert("You must log in to pick your team");
+    if (!savedUser) {
+      alert("Please log in to view your dashboard.");
       window.location.href = "/auth";
       return;
     }
-
-    const fetchTeam = async () => {
-      try {
-        // ✅ EDITED: Correct the URL to match the server route
-        const res = await axios.get("http://localhost:5000/api/my-team", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        // ✅ Now correctly accesses the 'team' and 'teamName' properties
-        setUserTeam(res.data.team || []);
-        setTeamName(res.data.teamName || "Your Team");
-      } catch (err) {
-        // ⚠️ Handles the case where the user has no team gracefully
-        console.error("Failed to fetch team:", err.response?.data || err.message);
-        setUserTeam([]);
-        setTeamName("Your Team");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTeam();
+    const userData = JSON.parse(savedUser);
+    setUser(userData);
+    
+    // Get team data from localStorage (saved by PickTeam)
+    const savedStartingXI = userData.startingXI || [];
+    const savedSubs = userData.subs || [];
+    
+    setStartingXI(savedStartingXI);
+    setSubs(savedSubs);
+    setFormation(userData.formation || formations[0].name);
+    
+    console.log("Dashboard Debug - Starting XI:", savedStartingXI);
+    console.log("Dashboard Debug - Subs:", savedSubs);
   }, []);
-  if (loading) return <p>Loading team...</p>;
 
-  const totalSpent = userTeam.reduce((sum, p) => sum + (p.marketvalue || 0), 0);
-  const budgetLeft = MAX_BUDGET - totalSpent;
-  const totalPoints = userTeam.reduce((sum, p) => sum + (p.points || 0), 0);
-
-  const formations = {
-    "4-4-2": { defenders: 4, midfielders: 4, forwards: 2 },
-    "4-3-3": { defenders: 4, midfielders: 3, forwards: 3 },
-    "3-5-2": { defenders: 3, midfielders: 5, forwards: 2 },
-    "5-3-2": { defenders: 5, midfielders: 3, forwards: 2 },
+  const handleFormationChange = (e) => {
+    setFormation(e.target.value);
+    if (user) {
+      const updatedUser = { ...user, formation: e.target.value };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      setUser(updatedUser);
+    }
   };
 
-  const currentFormation = formations[formation];
+  if (!user || startingXI.length !== 11 || subs.length !== 4) {
+    return (
+      <div style={{
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        color: "white",
+        padding: "20px",
+        textAlign: "center"
+      }}>
+        <div style={{
+          background: "rgba(255, 255, 255, 0.1)",
+          backdropFilter: "blur(10px)",
+          borderRadius: "20px",
+          padding: "40px",
+          maxWidth: "500px"
+        }}>
+          <h2 style={{ color: "#4c6ef5", marginBottom: "20px" }}>⚽ Complete Your Team Selection!</h2>
+          <p style={{ marginBottom: "20px", fontSize: "1.2rem" }}>
+            You must pick 11 starters and 4 subs before accessing the dashboard.
+          </p>
+          
+          {/* Debug Info */}
+          <div style={{ 
+            background: "rgba(255, 255, 255, 0.1)", 
+            padding: "15px", 
+            borderRadius: "10px", 
+            marginBottom: "20px",
+            fontSize: "0.9rem",
+            textAlign: "left"
+          }}>
+            <h4 style={{ margin: "0 0 10px 0", color: "#f39c12" }}>Current Status:</h4>
+            <p style={{ margin: "5px 0" }}>👥 Squad: {user?.squad?.length || 0}/15 players</p>
+            <p style={{ margin: "5px 0" }}>🏟️ Starting XI: {startingXI.length}/11 players</p>
+            <p style={{ margin: "5px 0" }}>🔄 Substitutes: {subs.length}/4 players</p>
+          </div>
 
-  const goalkeepers = userTeam.filter(
-    (p) => p.position.toLowerCase() === "goalkeeper"
-  );
-  const defenders = userTeam.filter(
-    (p) => p.position.toLowerCase() === "defender"
-  );
-  const midfielders = userTeam.filter(
-    (p) => p.position.toLowerCase() === "midfielder"
-  );
-  const forwards = userTeam.filter((p) => p.position.toLowerCase() === "forward");
+          <div style={{ display: "flex", gap: "10px", justifyContent: "center", flexWrap: "wrap" }}>
+            {(!user?.squad || user.squad.length < 15) && (
+              <a href="/players" style={{
+                padding: "12px 24px",
+                borderRadius: "12px",
+                textDecoration: "none",
+                background: "linear-gradient(135deg, #3498db 0%, #2980b9 100%)",
+                color: "white",
+                fontWeight: "600"
+              }}>
+                Buy Players
+              </a>
+            )}
+            
+            {user?.squad?.length >= 15 && (
+              <a href="/pick-team" style={{
+                padding: "12px 24px",
+                borderRadius: "12px",
+                textDecoration: "none",
+                background: "linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)",
+                color: "white",
+                fontWeight: "600"
+              }}>
+                Pick Your Team
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  const teamColors = {
-    "Inter Milan": "#1e3a8a",
-    "AC Milan": "#b91c1c",
-    Napoli: "#1e40af",
-    Juventus: "#111827",
-  };
-
-  const positions = {
-    goalkeeper: [{ top: "90%", left: "50%" }],
-    defenders: [
-      { top: "70%", left: "15%" },
-      { top: "70%", left: "35%" },
-      { top: "70%", left: "65%" },
-      { top: "70%", left: "85%" },
-    ],
-    midfielders: [
-      { top: "50%", left: "10%" },
-      { top: "50%", left: "40%" },
-      { top: "50%", left: "60%" },
-      { top: "50%", left: "90%" },
-    ],
-    forwards: [
-      { top: "20%", left: "35%" },
-      { top: "20%", left: "65%" },
-    ],
-  };
-
-  const renderPlayer = (player, pos) => (
-    <div
-      key={player._id}
-      style={{
-        position: "absolute",
-        top: pos.top,
-        left: pos.left,
-        transform: "translate(-50%, -50%)",
-        backgroundColor: teamColors[player.team] || "#222",
-        color: "#fff",
-        borderRadius: "50%",
-        width: "60px",
-        height: "60px",
+  const renderFormation = () => {
+    const selected = formations.find(f => f.name === formation);
+    if (!selected) return null;
+    let idx = 0;
+    return (
+      <div style={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        fontSize: "12px",
-        textAlign: "center",
-        padding: "4px",
-      }}
-    >
-      <b>{player.name}</b>
-      <div>{player.points} pts</div>
-    </div>
-  );
+        gap: "20px",
+        margin: "40px 0"
+      }}>
+        {selected.layout.map((num, rowIdx) => (
+          <div key={rowIdx} style={{ display: "flex", justifyContent: "center", gap: "20px" }}>
+            {[...Array(num)].map((_, i) => {
+              const player = startingXI[idx];
+              idx++;
+              return (
+                <div key={i} style={{
+                  background: "rgba(255,255,255,0.95)",
+                  borderRadius: "12px",
+                  padding: "10px 18px",
+                  color: "#333",
+                  minWidth: "120px",
+                  textAlign: "center",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
+                }}>
+                  <div style={{ fontWeight: "700", fontSize: "1rem" }}>{player ? player.name : "-"}</div>
+                  <div style={{ fontSize: "0.9rem", color: "#7f8c8d" }}>{player ? `${player.position} | ${player.team}` : ""}</div>
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   return (
-    <div
-      style={{
-        padding: "20px",
-        minHeight: "100vh",
-        backgroundColor: "#004400",
-        color: "#fff",
-      }}
-    >
-      <h1 style={{ textAlign: "center", color: "#4c6ef5" }}>
-        {teamName}
-      </h1>
-
-      <div
-        style={{
-          textAlign: "center",
-          marginBottom: "15px",
-          color: "#bcd0ff",
-        }}
-      >
-        <div>💰 Budget Left: ${budgetLeft}M</div>
-        <div>💸 Spent: ${totalSpent}M</div>
-        <div>⚽ Total Points: {totalPoints}</div>
-      </div>
-
-      <div style={{ textAlign: "center", marginBottom: "15px" }}>
-        <label style={{ marginRight: "10px" }}>Formation:</label>
-        <select
-          value={formation}
-          onChange={(e) => setFormation(e.target.value)}
-          style={{
-            padding: "6px",
-            borderRadius: "6px",
-            border: "1px solid #4c6ef5",
-            backgroundColor: "#000",
-            color: "#bcd0ff",
-          }}
-        >
-          {Object.keys(formations).map((f) => (
-            <option key={f} value={f}>
-              {f}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Pitch */}
-      <div
-        style={{
-          position: "relative",
-          width: "100%",
-          maxWidth: "800px",
-          height: "600px",
+    <div style={{
+      minHeight: "100vh",
+      background: "linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%)",
+      padding: "40px 20px",
+      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+    }}>
+      <div style={{ textAlign: "center", marginBottom: "40px" }}>
+        <h1 style={{
+          fontSize: "3rem",
+          fontWeight: "800",
+          background: "linear-gradient(135deg, #4c6ef5 0%, #3b5bdb 50%, #845ef7 100%)",
+          backgroundClip: "text",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          marginBottom: "20px"
+        }}>
+          Dashboard
+        </h1>
+        <div style={{
+          background: "rgba(255, 255, 255, 0.1)",
+          backdropFilter: "blur(10px)",
+          borderRadius: "15px",
+          padding: "20px",
+          maxWidth: "600px",
           margin: "0 auto",
-          backgroundColor: "#006400",
-          border: "2px solid #fff",
-          borderRadius: "10px",
-          overflow: "hidden",
-        }}
-      >
-        {/* Markings */}
-        <div
-          style={{
-            position: "absolute",
-            top: "0",
-            left: "0",
-            width: "100%",
-            height: "100%",
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: 0,
-              width: "100%",
-              height: "2px",
-              backgroundColor: "#fff",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              width: "100px",
-              height: "100px",
-              marginTop: "-50px",
-              marginLeft: "-50px",
-              border: "2px solid #fff",
-              borderRadius: "50%",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: "0",
-              left: "35%",
-              width: "30%",
-              height: "60px",
-              border: "2px solid #fff",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              bottom: "0",
-              left: "35%",
-              width: "30%",
-              height: "60px",
-              border: "2px solid #fff",
-            }}
-          />
+          color: "white"
+        }}>
+          <h3 style={{ margin: "0 0 10px 0", color: "#94a3b8" }}>Select Formation</h3>
+          <select value={formation} onChange={handleFormationChange} style={{
+            padding: "10px 20px",
+            borderRadius: "8px",
+            fontSize: "1rem",
+            fontWeight: "600",
+            background: "rgba(255,255,255,0.95)",
+            color: "#333",
+            border: "none",
+            marginBottom: "20px"
+          }}>
+            {formations.map(f => (
+              <option key={f.name} value={f.name}>{f.name}</option>
+            ))}
+          </select>
         </div>
-
-        {goalkeepers.map((p, idx) => renderPlayer(p, positions.goalkeeper[idx]))}
-        {defenders
-          .slice(0, currentFormation.defenders)
-          .map((p, idx) => renderPlayer(p, positions.defenders[idx]))}
-        {midfielders
-          .slice(0, currentFormation.midfielders)
-          .map((p, idx) => renderPlayer(p, positions.midfielders[idx]))}
-        {forwards
-          .slice(0, currentFormation.forwards)
-          .map((p, idx) => renderPlayer(p, positions.forwards[idx]))}
+      </div>
+      <div>
+        {renderFormation()}
+      </div>
+      <div style={{
+        background: "rgba(255, 255, 255, 0.1)",
+        backdropFilter: "blur(10px)",
+        borderRadius: "15px",
+        padding: "25px",
+        margin: "20px 0",
+        color: "white"
+      }}>
+        <h2 style={{ fontSize: "1.8rem", marginBottom: "20px", color: "#f39c12", textAlign: "center" }}>
+           Substitutes ({subs.length}/4)
+        </h2>
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", minHeight: "100px" }}>
+          {subs.length === 0 ? (
+            <p style={{ color: "#94a3b8", fontSize: "1.1rem", textAlign: "center", width: "100%" }}>
+              No substitutes selected.
+            </p>
+          ) : (
+            subs.map(player => (
+              <div key={player._id} style={{
+                background: "rgba(255, 255, 255, 0.95)",
+                borderRadius: "15px",
+                padding: "15px",
+                margin: "8px",
+                color: "#333",
+                textAlign: "center",
+                minWidth: "200px"
+              }}>
+                <h4 style={{ margin: "0 0 8px 0", fontSize: "1.1rem" }}>{player.name}</h4>
+                <p style={{ margin: "0 0 8px 0", color: "#7f8c8d", fontSize: "0.9rem" }}>
+                  {player.position} | {player.team}
+                </p>
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
